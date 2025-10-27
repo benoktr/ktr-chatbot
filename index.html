@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KTR ChatBot</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="KTR ChatBot: An intelligent, attractive AI assistant created by AUSTIN BENO JS. Engage in dynamic conversations, get accurate answers, and experience a beautiful, animated interface." />
+    <meta name="keywords" content="KTR ChatBot, AI Chatbot, Gemini API, AUSTIN BENO JS, intelligent assistant, PWA" />
+    <meta name="author" content="AUSTIN BENO JS" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="KTR ChatBot - Your Intelligent AI Assistant" />
+    <meta property="og:description" content="Engage in dynamic conversations with KTR, a beautiful and intelligent AI assistant powered by the Gemini API." />
+    <meta property="og:image" content="https://placehold.co/1200x630/1e1b4b/ffffff/png?text=KTR+ChatBot" /> 
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="KTR ChatBot - Your Intelligent AI Assistant" />
+    <meta property="twitter:description" content="Engage in dynamic conversations with KTR, a beautiful and intelligent AI assistant powered by the Gemini API." />
+    <meta property="twitter:image" content="https://placehold.co/1200x630/1e1b4b/ffffff/png?text=KTR+ChatBot" />
+
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#1e1b4b" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+      
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+    
+      @keyframes fade-in-up {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    
+      .animate-fade-in-up {
+        animation: fade-in-up 0.4s ease-out forwards;
+      }
+
+      /* Bouncing loader animation */
+      .bouncing-loader > div {
+        animation: bouncing-loader 0.8s infinite alternate;
+      }
+      .bouncing-loader > div:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .bouncing-loader > div:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+      @keyframes bouncing-loader {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-8px);
+        }
+      }
+
+      /* Live Animation CSS */
+      .animated-gradient-bg {
+        background: linear-gradient(-45deg, #1e1b4b, #1e293b, #0f172a, #2c1a4d);
+        background-size: 400% 400%;
+        animation: animated-gradient 15s ease infinite;
+      }
+
+      @keyframes animated-gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .animate-pulse-glow {
+        animation: pulse-glow 2s infinite ease-in-out;
+      }
+
+      @keyframes pulse-glow {
+        0%, 100% {
+          filter: drop-shadow(0 0 2px #60a5fa);
+        }
+        50% {
+          filter: drop-shadow(0 0 8px #60a5fa);
+        }
+      }
+
+      /* Animated Text Gradient */
+      .animated-text-gradient {
+        background: linear-gradient(90deg, #3b82f6, #9333ea, #ec4899, #3b82f6);
+        background-size: 200% auto;
+        background-clip: text;
+        -webkit-background-clip: text; /* For Safari compatibility */
+        color: transparent;
+        animation: text-gradient-flow 3s linear infinite;
+      }
+
+      @keyframes text-gradient-flow {
+        0% {
+          background-position: 200% center;
+        }
+        100% {
+          background-position: 0% center;
+        }
+      }
+
+      /* Snowfall Animation */
+      .snowflake {
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+        pointer-events: none;
+        animation: snowfall linear infinite;
+      }
+
+      @keyframes snowfall {
+        0% {
+          transform: translateY(-10vh) translateX(0);
+        }
+        100% {
+          transform: translateY(110vh) translateX(5vw);
+        }
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "vite": "https://aistudiocdn.com/vite@^7.1.12",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.27.0",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-[#0f121b]">
+    <div id="root"></div>
+    <script type="module" src="/src/index.tsx"></script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "KTR Chatbot",
+  "description": "A sleek and responsive chatbot application powered by the Gemini API. Users can ask questions and receive real-time, streamed responses from the gemini-2.5-flash model in a beautiful chat interface.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ]
+}
