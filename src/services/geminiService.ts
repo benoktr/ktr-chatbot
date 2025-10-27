@@ -1,8 +1,7 @@
-
 import { GoogleGenAI, Chat, Content } from "@google/genai";
 
-// FIX: Per coding guidelines, the API key must be obtained from process.env.API_KEY.
-// This also resolves the TypeScript error "Property 'env' does not exist on type 'ImportMeta'".
+// Fix: Per coding guidelines, the API key must be from process.env.API_KEY.
+// The execution environment is assumed to make this available, even in a Vite client.
 if (!process.env.API_KEY) {
     throw new Error("API_KEY environment variable is not set");
 }
