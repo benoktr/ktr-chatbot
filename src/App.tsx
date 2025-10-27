@@ -38,6 +38,7 @@ const App: React.FC = () => {
     [chatSessions, activeChatId]
   );
   const messages = activeChat?.messages ?? [];
+  const lastMessage = messages[messages.length - 1];
 
   const handleNewChat = useCallback(() => {
     const newChatId = Date.now().toString();
@@ -193,9 +194,17 @@ const App: React.FC = () => {
           prev.map(session => {
             if (session.id === activeChatId) {
               const newMessages = [...session.messages];
-              newMessages[newMessages.length - 1].text = modelResponse;
+              const currentLastMessage = newMessages[newMessages.length - 1];
+              if (currentLastMessage) {
+                currentLastMessage.text = modelResponse;
+              }
+
               const newHistory = [...session.history];
-              (newHistory[newHistory.length - 1].parts[0] as {text: string}).text = modelResponse;
+              const lastHistory = newHistory[newHistory.length - 1];
+              if (lastHistory && lastHistory.parts[0]) {
+                (lastHistory.parts[0] as {text: string}).text = modelResponse;
+              }
+              
               return { ...session, messages: newMessages, history: newHistory };
             }
             return session;
@@ -328,7 +337,7 @@ const App: React.FC = () => {
                 {messages.map((msg, index) => (
                     <ChatMessageComponent key={index} message={msg} />
                 ))}
-                {isLoading && messages[messages.length - 1]?.role === MessageRole.MODEL && !messages[messages.length - 1]?.text && (
+                {isLoading && lastMessage && lastMessage.role === MessageRole.MODEL && !lastMessage.text && (
                     <div className="flex items-start gap-3 my-4 justify-start animate-fade-in-up">
                          <div className="w-8 h-8 flex-shrink-0 rounded-full bg-slate-700 flex items-center justify-center">
                             <BotIcon className="w-5 h-5 text-slate-300" />
