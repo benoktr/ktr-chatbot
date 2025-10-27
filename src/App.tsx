@@ -106,13 +106,20 @@ const App: React.FC = () => {
       chatRef.current = createChatSession(activeChat.history);
     } catch (error) {
       console.error("Failed to initialize chat session:", error);
-      setChatSessions(prev =>
-        prev.map(s =>
-          s.id === activeChatId
-            ? { ...s, messages: [...s.messages, { role: MessageRole.ERROR, text: "Error re-initializing chat. Please check your API key." }] }
-            : s
-        )
-      );
+      
+      const errorMessage = "Error re-initializing chat. Please check your API key.";
+      const currentLastMessage = activeChat.messages[activeChat.messages.length - 1];
+
+      // Prevent adding duplicate error messages in a loop.
+      if (currentLastMessage?.role !== MessageRole.ERROR || currentLastMessage?.text !== errorMessage) {
+        setChatSessions(prev =>
+          prev.map(s =>
+            s.id === activeChatId
+              ? { ...s, messages: [...s.messages, { role: MessageRole.ERROR, text: errorMessage }] }
+              : s
+          )
+        );
+      }
     }
   }, [activeChat, activeChatId]);
 
