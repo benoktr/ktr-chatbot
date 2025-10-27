@@ -10,5 +10,8 @@ export default defineConfig({
     // This makes 'process.env.API_KEY' available in the code,
     // and Vite will replace it with the value of VITE_API_KEY during build.
     'process.env.API_KEY': JSON.stringify(process.env.VITE_API_KEY),
+  },
+  build: {
+    outDir: 'build'
   }
 })
