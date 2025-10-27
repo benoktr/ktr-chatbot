@@ -195,14 +195,14 @@ const App: React.FC = () => {
             if (session.id === activeChatId) {
               const newMessages = [...session.messages];
               const currentLastMessage = newMessages[newMessages.length - 1];
-              if (currentLastMessage) {
+              if (currentLastMessage?.role === MessageRole.MODEL) {
                 currentLastMessage.text = modelResponse;
               }
 
               const newHistory = [...session.history];
-              const lastHistory = newHistory[newHistory.length - 1];
-              if (lastHistory && lastHistory.parts[0]) {
-                (lastHistory.parts[0] as {text: string}).text = modelResponse;
+              const lastHistoryEntry = newHistory[newHistory.length - 1];
+              if (lastHistoryEntry?.role === 'model' && lastHistoryEntry.parts?.[0]) {
+                (lastHistoryEntry.parts[0] as {text: string}).text = modelResponse;
               }
               
               return { ...session, messages: newMessages, history: newHistory };
