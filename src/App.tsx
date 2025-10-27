@@ -38,7 +38,6 @@ const App: React.FC = () => {
     [chatSessions, activeChatId]
   );
   const messages = activeChat?.messages ?? [];
-  const lastMessage = messages[messages.length - 1];
 
   const handleNewChat = useCallback(() => {
     const newChatId = Date.now().toString();
@@ -329,7 +328,7 @@ const App: React.FC = () => {
                 {messages.map((msg, index) => (
                     <ChatMessageComponent key={index} message={msg} />
                 ))}
-                {isLoading && lastMessage && lastMessage.role === MessageRole.MODEL && !lastMessage.text && (
+                {isLoading && messages[messages.length - 1]?.role === MessageRole.MODEL && !messages[messages.length - 1]?.text && (
                     <div className="flex items-start gap-3 my-4 justify-start animate-fade-in-up">
                          <div className="w-8 h-8 flex-shrink-0 rounded-full bg-slate-700 flex items-center justify-center">
                             <BotIcon className="w-5 h-5 text-slate-300" />
