@@ -1,0 +1,21 @@
+services:
+  # A static site for the frontend
+  - type: web
+    name: ktr-chatbot
+    env: static
+    # Specify the Node.js version for build consistency
+    nodeVersion: "20"
+    # The build command for a Vite project
+    buildCommand: npm install && npm run build
+    # The directory where the built static files are located
+    staticPublishPath: ./build
+    envVars:
+      # Render will ask for this value when setting up the service.
+      # The key here MUST start with VITE_ to be exposed to the client by Vite.
+      - key: VITE_API_KEY
+        sync: false
+    routes:
+      # A rewrite rule to support single-page application (SPA) routing
+      - type: rewrite
+        source: /.*
+        destination: /index.html

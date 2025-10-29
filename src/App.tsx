@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Chat, Content, Part } from '@google/genai';
 import { createChatSession } from './services/geminiService';
@@ -30,7 +29,7 @@ const App: React.FC = () => {
   const [user, setUser] = useState<{ email: string } | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-  const chatRef = useRef<Chat | null>(null);
+  const chatInstancesRef = useRef<Map<string, Chat>>(new Map());
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const activeChat = useMemo(() => 
@@ -97,31 +96,34 @@ const App: React.FC = () => {
   }, [chatSessions, user]);
 
   useEffect(() => {
-    if (!activeChat) {
-      chatRef.current = null;
-      return;
-    }
+    if (!activeChatId) return;
+    
+    const sessionData = chatSessions.find(s => s.id === activeChatId);
+    if (!sessionData) return;
 
-    try {
-      chatRef.current = createChatSession(activeChat.history);
-    } catch (error) {
-      console.error("Failed to initialize chat session:", error);
-      
-      const errorMessage = "Error re-initializing chat. Please check your API key.";
-      const currentLastMessage = activeChat.messages[activeChat.messages.length - 1];
-
-      // Prevent adding duplicate error messages in a loop.
-      if (currentLastMessage?.role !== MessageRole.ERROR || currentLastMessage?.text !== errorMessage) {
-        setChatSessions(prev =>
-          prev.map(s =>
-            s.id === activeChatId
-              ? { ...s, messages: [...s.messages, { role: MessageRole.ERROR, text: errorMessage }] }
-              : s
-          )
-        );
-      }
+    // If a chat instance for this session doesn't exist, create and cache it.
+    if (!chatInstancesRef.current.has(activeChatId)) {
+        try {
+          const newChatInstance = createChatSession(sessionData.history);
+          chatInstancesRef.current.set(activeChatId, newChatInstance);
+        } catch (error) {
+          console.error("Failed to initialize chat session:", error);
+          const errorMessage = "Error initializing chat. Please check your API key.";
+          setChatSessions(prev =>
+            prev.map(s => {
+                if (s.id === activeChatId) {
+                    const lastMsg = s.messages[s.messages.length - 1];
+                    if (lastMsg?.role !== MessageRole.ERROR || lastMsg?.text !== errorMessage) {
+                        return { ...s, messages: [...s.messages, { role: MessageRole.ERROR, text: errorMessage }] };
+                    }
+                }
+                return s;
+            })
+          );
+        }
     }
-  }, [activeChat, activeChatId]);
+  }, [activeChatId, chatSessions]);
+
 
   useEffect(() => {
     if ('Notification' in window) {
@@ -151,8 +153,14 @@ const App: React.FC = () => {
   };
 
   const handleSendMessage = async (userMessage: string, image?: File | null) => {
-    if (!chatRef.current || !activeChatId) {
-        console.error("Chat session not active.");
+    const chatInstance = chatInstancesRef.current.get(activeChatId!);
+
+    if (!chatInstance || !activeChatId) {
+        console.error("Chat session not active or instance not found.");
+        const errorMsg: ChatMessage = { role: MessageRole.ERROR, text: "Chat could not be initialized. Please try starting a new chat." };
+        setChatSessions(prev => 
+            prev.map(s => s.id === activeChatId ? { ...s, messages: [...s.messages, errorMsg] } : s)
+        );
         return;
     }
 
@@ -194,7 +202,7 @@ const App: React.FC = () => {
 
     let modelResponse = '';
     try {
-      const stream = await chatRef.current.sendMessageStream({ message: apiParts });
+      const stream = await chatInstance.sendMessageStream({ message: apiParts });
       for await (const chunk of stream) {
         modelResponse += chunk.text;
         setChatSessions(prev => 
@@ -265,6 +273,9 @@ const App: React.FC = () => {
         if (user) {
             localStorage.removeItem(`ktr_chat_history_${user.email}`);
         }
+        // Clear the cached chat instances
+        chatInstancesRef.current.clear();
+        
         // Reset the state to a single new chat
         const newChatId = Date.now().toString();
         const initialMessageText = "Hello! I'm KTR. How can I assist you today?";
